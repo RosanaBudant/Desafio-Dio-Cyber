@@ -1,0 +1,15 @@
+root
+msfadmin
+admin
+user
+test
+www
+ftp
+guest
+postgres
+service
+backup
+mysql
+oracle
+tomcat
+EOF

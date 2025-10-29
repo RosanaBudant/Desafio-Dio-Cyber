@@ -1,0 +1,11 @@
+admin
+root
+user
+test
+password
+123456
+admin123
+ftp
+msfadmin
+EOF
+
